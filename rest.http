@@ -1,0 +1,75 @@
+###
+GET http://localhost:5000
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg5NjQ3MjYsImV4cCI6MTY0ODk2NjUyNiwiYXVkIjoiNjI0ODgyY2M0ZWVhOWE4YzRkMmY2Njc3IiwiaXNzIjoibXlwb3N0LmNvbSJ9.9Hi41hNCj9vRK_K5PNy9MluDrD_3snf9dPSDuxVX-DI
+
+### register
+POST  http://localhost:4000/auth/register 
+Content-Type: application/json
+
+{
+    "Uname":"venkeeey",
+    "email":"venkeeey@gmail.com",
+    "password":"sravan"
+}
+### login
+POST  http://localhost:4000/auth/login 
+Content-Type: application/json
+
+{
+    "email":"venkey@gmail.com",
+    "password":"sravan"
+}
+### refresh token
+
+POST http://localhost:5000/auth/refresh-token 
+Content-Type: application/json
+
+{
+    "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg5NjAzMzEsImV4cCI6MTY0ODk2MjEzMSwiYXVkIjoiNjI0ODgyY2M0ZWVhOWE4YzRkMmY2Njc3IiwiaXNzIjoibXlwb3N0LmNvbSJ9.it5sZkGgGsLmdl2iVXjhJu8F9Z89iHEqZb8oO3U2XvU"
+}
+
+### logout
+POST  http://localhost:3000/auth/logout 
+
+### Create post route
+POST  http://localhost:4000/auth/createpost 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk1MTU0MzIsImV4cCI6MTY1Mjk3MTQzMiwiYXVkIjoiNjI1MTliYTg3NDU2NzA0N2UxYTRmNDRhIiwiaXNzIjoibXlwb3N0LmNvbSJ9.yqdQjF-VMWQnH0jUVXdwG5SWh6XocMnH6h2pXEEqEH8
+Content-Type: application/json
+
+{
+    "postcontent":"hello how are you all--2"
+}
+
+### Delete Post Route
+
+POST  http://localhost:4000/auth/deletepost 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk1MTU0MzIsImV4cCI6MTY1Mjk3MTQzMiwiYXVkIjoiNjI1MTliYTg3NDU2NzA0N2UxYTRmNDRhIiwiaXNzIjoibXlwb3N0LmNvbSJ9.yqdQjF-VMWQnH0jUVXdwG5SWh6XocMnH6h2pXEEqEH8
+Content-Type: application/json
+
+{
+    "postId":"6251a6e57df035f14b7513e0"
+}
+### 6251a6e57df035f14b7513e0
+
+### Get My Posts
+GET  http://localhost:4000/auth/MyPosts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk1MTU0MzIsImV4cCI6MTY1Mjk3MTQzMiwiYXVkIjoiNjI1MTliYTg3NDU2NzA0N2UxYTRmNDRhIiwiaXNzIjoibXlwb3N0LmNvbSJ9.yqdQjF-VMWQnH0jUVXdwG5SWh6XocMnH6h2pXEEqEH8
+
+### Get WallPapers
+Get http://localhost:4000/auth/wallpapers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk1MTU0MzIsImV4cCI6MTY1Mjk3MTQzMiwiYXVkIjoiNjI1MTliYTg3NDU2NzA0N2UxYTRmNDRhIiwiaXNzIjoibXlwb3N0LmNvbSJ9.yqdQjF-VMWQnH0jUVXdwG5SWh6XocMnH6h2pXEEqEH8
+
+
+
+
+### Get Quotes
+Get http://localhost:4000/auth/quotes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk1MTU0MzIsImV4cCI6MTY1Mjk3MTQzMiwiYXVkIjoiNjI1MTliYTg3NDU2NzA0N2UxYTRmNDRhIiwiaXNzIjoibXlwb3N0LmNvbSJ9.yqdQjF-VMWQnH0jUVXdwG5SWh6XocMnH6h2pXEEqEH8
+
+
+
+
+# ### like 
+# POST  http://localhost:5000/auth/62493afc732f8a984f97f7c7/like
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg5NjQ4NDMsImV4cCI6MTY0ODk2NzI0MywiYXVkIjoiNjI0ODgyY2M0ZWVhOWE4YzRkMmY2Njc3IiwiaXNzIjoibXlwb3N0LmNvbSJ9.Ylsvn0qgsssoV-n_znmwkvvhIxMKd5eVL_UIc0uB0N8
+
