@@ -39,7 +39,7 @@ app.use((err,req,res,next)=>{
 })
 
 
-app.listen(PORT,()=>{
+const server = app.listen(PORT,()=>{
     const port = server.address().port;
     console.log(`Server running on port ${port}`)
 })
