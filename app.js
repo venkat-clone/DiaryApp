@@ -12,7 +12,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 // app.use(express.urlencoded({extended:true}))
 app.get('/',async(req,res,next)=>{
-    res.send('New Version')
+    res.send('new Changes')
 })
 
 
