@@ -14,13 +14,7 @@ app.use(express.json())
 app.get('/',async(req,res,next)=>{
     res.send('new Changes')
 })
-
-
 app.use('/auth',Authroute)
-
-
-
-
 app.use(async (req,res,next)=>{
     // const error = new Error("Not Found")
     // error.status =404
@@ -37,7 +31,6 @@ app.use((err,req,res,next)=>{
         }
     })
 })
-
 
 const server = app.listen(PORT,()=>{
     const port = server.address().port;
