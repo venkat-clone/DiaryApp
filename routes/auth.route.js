@@ -34,6 +34,7 @@ router.post('/login',async(req,res,next)=>{
 
     try {
         const validuser = req.body
+        console.log(" Step 1")
         const User_ = await User.findOne({email:validuser.email})
         if(!User_) throw createError.NotFound("User Not Found")
 
