@@ -25,6 +25,7 @@ router.post('/register',async(req,res,next)=>{
         res.send({accestoken,refreshToken})
 
     } catch (error) {
+        console.log(error)
         if(error.isJoi === true) error.status = 422
         next(error)
     }
