@@ -15,8 +15,6 @@ router.post('/register',async(req,res,next)=>{
         const validUser = await authSchema.validateAsync(req.body)
         const doseExist = await User.findOne({email:validUser.email})
         if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`)
-        const Newuser = await User.findOne({Uname:validUser.Uname})
-        if(Newuser) throw createError.Conflict(`${validUser.Uname} already Exist`)
         const user = new User(validUser)
         const Saveduser = await user.save()
         const accestoken = await signAccessToken(Saveduser.id);
@@ -49,7 +47,7 @@ router.post('/login',async(req,res,next)=>{
 
         res.send({accessToken,refreshToken})
     } catch (error) {
-        if(error.isJoi == true ) return next(createError.BadRequest("Invali Username/Password"))
+        if(error.isJoi === true ) return next(createError.BadRequest("Invali Username/Password"))
         next(error)
     }
     
