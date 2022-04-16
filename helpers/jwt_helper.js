@@ -63,7 +63,7 @@ module.exports ={
                     return
                 }
             console.log("Step 1.2")
-                client.set(userId,token).catch((err)=>{
+                await client.set(userId,token).catch((err)=>{
                     console.log(err.message)
                     reject(createError.InternalServerError)
                 }).then(()=>{
