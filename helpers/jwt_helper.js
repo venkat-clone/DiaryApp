@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken')
 const createError = require('http-errors')
-const client = require('./init_redis')
+// const client = require('./init_redis')
 
 module.exports ={
     signAccessToken:(userId)=>{
@@ -63,13 +63,15 @@ module.exports ={
                     return
                 }
             console.log("Step 1.2")
-                client.set(userId,token).catch((err)=>{
-                    console.log(err.message)
-                    reject(createError.InternalServerError)
-                }).then(()=>{
-            console.log("Step 1.3.1")
-                    resolve(token)
-                })
+            resolve(token)
+            //     client.set(userId,token).catch((err)=>{
+            //         console.log(err.message)
+            //         reject(createError.InternalServerError)
+            //     }).then(()=>{
+            // console.log("Step 1.3.1")
+            //         resolve(token)
+            //     })
+            
             console.log("Step 1.3")
                 // NOT WORKING CODE
                 // client.SET(userId,token, async (err,reply)=>{
@@ -93,12 +95,12 @@ module.exports ={
             JWT.verify(refreshToken,process.env.REFRESH_PRIATE_KEY,(err,Payload)=>{
                 if(err) return reject(createError.Unauthorized())
                 const userId = Payload.aud
-
-                client.get(userId).then(()=>resolve(userId)).catch((err)=>{
-                    console.log(err.message)
-                    reject(createError.InternalServerError)
-                    return
-                })
+                resolve(userId)
+                // client.get(userId).then(()=>resolve(userId)).catch((err)=>{
+                //     console.log(err.message)
+                //     reject(createError.InternalServerError)
+                //     return
+                // })
                 // CODE NOT WORKING
                 // client.GET(userId,(err,value)=>{
                 //     if(err){
