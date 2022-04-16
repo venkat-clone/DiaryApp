@@ -48,7 +48,7 @@ module.exports ={
         })
     },
     signRefreshToken:(userId)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
             const Payload = {}
             const opctions ={
                 expiresIn:'30d',
@@ -63,7 +63,7 @@ module.exports ={
                     return
                 }
             console.log("Step 1.2")
-                await client.set(userId,token).catch((err)=>{
+                client.set(userId,token).catch((err)=>{
                     console.log(err.message)
                     reject(createError.InternalServerError)
                 }).then(()=>{
