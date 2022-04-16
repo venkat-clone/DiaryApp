@@ -67,6 +67,7 @@ module.exports ={
                     console.log(err.message)
                     reject(createError.InternalServerError)
                 }).then(()=>{
+            console.log("Step 1.3.1")
                     resolve(token)
                 })
             console.log("Step 1.3")
