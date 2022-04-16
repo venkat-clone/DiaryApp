@@ -40,10 +40,10 @@ router.post('/login',async(req,res,next)=>{
         if(!isMatch) throw createError.Unauthorized("User/password Not Valid")
 
         const accessToken = await signAccessToken(User_.id)
-        console.log("okaokoko")
+        console.log("Step 2")
 
         const refreshToken = await signRefreshToken(User_.id)
-        console.log("okaokoko")
+        console.log("Step 3")
 
         res.send({accessToken,refreshToken})
     } catch (error) {

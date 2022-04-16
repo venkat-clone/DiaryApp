@@ -55,18 +55,21 @@ module.exports ={
                 issuer:'mypost.com',
                 audience:userId
             }
+            console.log("Step 1.1")
             JWT.sign(Payload,process.env.REFRESH_PRIATE_KEY,opctions,(err,token)=>{
                 if(err) {
                     console.log(err)
                     reject(createError.Unauthorized())
                     return
                 }
+            console.log("Step 1.2")
                 client.set(userId,token).catch((err)=>{
                     console.log(err.message)
                     reject(createError.InternalServerError)
                 }).then(()=>{
                     resolve(token)
                 })
+            console.log("Step 1.3")
                 // NOT WORKING CODE
                 // client.SET(userId,token, async (err,reply)=>{
                 //     console.log('hbjhbhj')
