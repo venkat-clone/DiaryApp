@@ -3,8 +3,7 @@ const bcrypt = require('bcrypt')
 const ProfileSchma = new mongoose.Schema({
     Uname:{
         type:String,
-        required:true,
-        unique:true
+        required:true
     },
     email:{
         type:String,

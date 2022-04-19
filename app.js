@@ -14,6 +14,12 @@ app.use(express.json())
 app.get('/',async(req,res,next)=>{
     res.send('new Changes')
 })
+
+app.get('/users/cleandb',async(req,res,next)=>{
+    
+})
+
+
 app.use('/auth',Authroute)
 app.use(async (req,res,next)=>{
     // const error = new Error("Not Found")

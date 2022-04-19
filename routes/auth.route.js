@@ -17,6 +17,8 @@ router.post('/register',async(req,res,next)=>{
         if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`)
         const user = new User(validUser)
         const Saveduser = await user.save()
+        
+
         const accestoken = await signAccessToken(Saveduser.id);
         const refreshToken = await signRefreshToken(Saveduser.id)
 
@@ -40,10 +42,10 @@ router.post('/login',async(req,res,next)=>{
         if(!isMatch) throw createError.Unauthorized("User/password Not Valid")
 
         const accessToken = await signAccessToken(User_.id)
-        console.log("okaokoko")
+        console.log("Step 2")
 
         const refreshToken = await signRefreshToken(User_.id)
-        console.log("okaokoko")
+        console.log("Step 3")
 
         res.send({accessToken,refreshToken})
     } catch (error) {

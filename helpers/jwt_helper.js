@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken')
 const createError = require('http-errors')
-const client = require('./init_redis')
+// const client = require('./init_redis')
 
 module.exports ={
     signAccessToken:(userId)=>{
@@ -48,25 +48,32 @@ module.exports ={
         })
     },
     signRefreshToken:(userId)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
             const Payload = {}
             const opctions ={
                 expiresIn:'30d',
                 issuer:'mypost.com',
                 audience:userId
             }
+            console.log("Step 1.1")
             JWT.sign(Payload,process.env.REFRESH_PRIATE_KEY,opctions,(err,token)=>{
                 if(err) {
                     console.log(err)
                     reject(createError.Unauthorized())
                     return
                 }
-                client.set(userId,token).catch((err)=>{
-                    console.log(err.message)
-                    reject(createError.InternalServerError)
-                }).then(()=>{
-                    resolve(token)
-                })
+            console.log("Step 1.2")
+            resolve(token)
+            //     client.set(userId,token).catch((err)=>{
+            //         console.log(err.message)
+            //         reject(createError.InternalServerError)
+            //     }).then(()=>{
+            // console.log("Step 1.3.1")
+            //         resolve(token)
+            //     })
+            
+            
+            console.log("Step 1.3")
                 // NOT WORKING CODE
                 // client.SET(userId,token, async (err,reply)=>{
                 //     console.log('hbjhbhj')
@@ -89,12 +96,12 @@ module.exports ={
             JWT.verify(refreshToken,process.env.REFRESH_PRIATE_KEY,(err,Payload)=>{
                 if(err) return reject(createError.Unauthorized())
                 const userId = Payload.aud
-
-                client.get(userId).then(()=>resolve(userId)).catch((err)=>{
-                    console.log(err.message)
-                    reject(createError.InternalServerError)
-                    return
-                })
+                resolve(userId)
+                // client.get(userId).then(()=>resolve(userId)).catch((err)=>{
+                //     console.log(err.message)
+                //     reject(createError.InternalServerError)
+                //     return
+                // })
                 // CODE NOT WORKING
                 // client.GET(userId,(err,value)=>{
                 //     if(err){
