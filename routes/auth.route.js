@@ -11,17 +11,18 @@ const https = require('https')
 
 router.post('/register',async(req,res,next)=>{
     try {
-
+        console.log("step 1")
         const validUser = await authSchema.validateAsync(req.body)
         const doseExist = await User.findOne({email:validUser.email})
         if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`)
+        console.log("step 2")
         const user = new User(validUser)
         const Saveduser = await user.save()
-        
+        console.log("step 3")
 
         const accestoken = await signAccessToken(Saveduser.id);
         const refreshToken = await signRefreshToken(Saveduser.id)
-
+        console.log("step 4")
         res.send({accestoken,refreshToken})
 
     } catch (error) {
