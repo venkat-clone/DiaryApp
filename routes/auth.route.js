@@ -16,12 +16,12 @@ router.post('/register',async(req,res,next)=>{
         const doseExist = await User.findOne({email:validUser.email})
         if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`)
         console.log("step 2")
-        const user = new User(validUser)
-        const Saveduser = await user.save()
-        console.log("step 3")
+        console.log(validUser)
+        const user_ = await User(validUser).save()
+        // const Saveduser = await user_.save()
 
-        const accestoken = await signAccessToken(Saveduser.id);
-        const refreshToken = await signRefreshToken(Saveduser.id)
+        const accestoken = await signAccessToken(user_.id);
+        const refreshToken = await signRefreshToken(user_.id)
         console.log("step 4")
         res.send({accestoken,refreshToken})
 

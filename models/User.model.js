@@ -1,15 +1,17 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const ProfileSchma = new mongoose.Schema({
-    Uname:{
-        type:String,
-        required:true
-    },
+    
     email:{
         type:String,
         required:true,
         lowercase:true,
         unique:true
+    },
+    Uname:{
+        type:String,
+        required:true,
+        unique:false
     },
     password:{
         type:String,
