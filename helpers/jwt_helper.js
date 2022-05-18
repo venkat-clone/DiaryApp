@@ -4,7 +4,7 @@ const createError = require('http-errors')
 
 module.exports ={
     signAccessToken:(userId)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
             const Payload = {}
             const opctions ={
                 expiresIn:'40d',
@@ -17,6 +17,7 @@ module.exports ={
                     reject(createError.InternalServerError())
                     return
                 }
+                console.log(token)
                 resolve(token)
 
 
@@ -24,7 +25,6 @@ module.exports ={
         })
     },
     verifyAccessToken:(req,res,next)=>{
-        console.log(req)
         if(!req.headers['authorization']) return next(createError.Unauthorized('Unauthorized Request'))
         const authheader = req.headers['authorization']
         const bearearToken = authheader.split(' ')
