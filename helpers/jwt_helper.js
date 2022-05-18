@@ -20,7 +20,6 @@ module.exports ={
                 console.log(token)
                 resolve(token)
 
-
             })
         })
     },
@@ -93,7 +92,7 @@ module.exports ={
         })
     },
     verifyRefreshToken:(refreshToken)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
             JWT.verify(refreshToken,process.env.REFRESH_PRIATE_KEY,(err,Payload)=>{
                 if(err) return reject(createError.Unauthorized())
                 const userId = Payload.aud
