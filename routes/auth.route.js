@@ -122,16 +122,14 @@ router.get('/MyPosts',verifyAccessToken,async(req,res,next)=>{
 
 router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
     try {
-        console.log("waiting")
-        const {page} = req.body
-
+        const {orientation} = req.body
         prms = {
             key: process.env.PIXBAYKEY,
             orientation:'vertical',
             editors_choice:'true',
             safesearch:'latest',
-            per_page:30,
-            page:page,
+            per_page:20,
+            page:req.query.page|1,
         }
 
         const x = await request(
@@ -140,7 +138,14 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
                 if(!body || error ) {
                     if(error) console.log(error)
                     throw createError.InternalServerError()}
-                res.send(body)
+                const json = JSON.parse(body)
+                const final = JSON.parse("[]")
+                json.hits.forEach(element => {
+                   
+                    final.push({
+                        "url":element.largeImageURL})
+                });
+                res.send(final)
             }
         )
         console.log("end")
