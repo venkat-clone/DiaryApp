@@ -45,8 +45,7 @@ router.post('/login',async(req,res,next)=>{
         const accessToken = await signAccessToken(User_.id)
 
         const refreshToken = await signRefreshToken(User_.id)
-        console.log("Step 3")
-        console.log(accessToken)
+
         res.send({accessToken,refreshToken})
     } catch (error) {
         if(error.isJoi === true ) return next(createError.BadRequest("Invali Username/Password"))
