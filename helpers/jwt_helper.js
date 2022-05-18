@@ -17,8 +17,8 @@ module.exports ={
                     reject(createError.InternalServerError())
                     return
                 }
-                console.log(token)
-                resolve(token)
+                console.log('Bearer ${token}')
+                resolve('Bearer ${token}')
 
             })
         })
