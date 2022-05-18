@@ -127,7 +127,6 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
             key: process.env.PIXBAYKEY,
             orientation:'vertical',
             editors_choice:'true',
-            safesearch:'latest',
             per_page:20,
             page:req.query.page|1,
         }
