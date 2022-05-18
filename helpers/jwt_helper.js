@@ -24,7 +24,7 @@ module.exports ={
         })
     },
     verifyAccessToken:(req,res,next)=>{
-        console.log(req.headers['authorization'])
+        console.log(req)
         if(!req.headers['authorization']) return next(createError.Unauthorized('Unauthorized Request'))
         const authheader = req.headers['authorization']
         const bearearToken = authheader.split(' ')
