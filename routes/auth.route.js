@@ -164,6 +164,42 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
     }
 })
 
+router.get('/search/wall',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const {orientation} = req.body
+        prms = {
+            key: process.env.PIXBAYKEY,
+            orientation:'vertical',
+            editors_choice:'true',
+            per_page:20,
+            q:req.query.pix|"",
+            page:req.query.page|1,
+        }
+
+        const x = await request(
+            {url:process.env.PIXABAY_URL, qs:prms},
+            function async(error,responce,body){
+                if(!body || error ) {
+                    if(error) console.log(error)
+                    throw createError.InternalServerError()}
+                const json = JSON.parse(body)
+                const final = JSON.parse("[]")
+                json.hits.forEach(element => {
+                   
+                    final.push({
+                        "url":element.largeImageURL})
+                });
+                res.send(final)
+            }
+        )
+        console.log("end")
+
+    } catch (error){
+        next(error)
+    }
+})
+
+
 
 
 router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
