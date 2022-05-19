@@ -172,7 +172,7 @@ router.get('/search/wall',verifyAccessToken,async(req,res,next)=>{
             orientation:'vertical',
             editors_choice:'true',
             per_page:20,
-            q:req.query.pix|"",
+            q:req.query.pix||"wallpapr",
             page:req.query.page|1,
         }
 
@@ -184,8 +184,9 @@ router.get('/search/wall',verifyAccessToken,async(req,res,next)=>{
                     throw createError.InternalServerError()}
                 const json = JSON.parse(body)
                 const final = JSON.parse("[]")
+                // final.hits.pop()
+                
                 json.hits.forEach(element => {
-                   console.log("--->")
                     final.push({
                         "url":element.largeImageURL})
                 });
