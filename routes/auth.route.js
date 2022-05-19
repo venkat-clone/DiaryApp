@@ -225,7 +225,7 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
                     final.push({
                         "quote":element.content})
                 });
-                
+                console.log(final)
                 res.send(final)
             }
         )
