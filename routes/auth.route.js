@@ -209,7 +209,7 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
         const {page} = req.body
 
         prms = {
-            page:page,
+            page:req.query.page,
             maxLength:60,
             limit:100}
 
