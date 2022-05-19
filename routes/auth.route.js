@@ -208,7 +208,10 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
         console.log("waiting")
         const {page} = req.body
 
-        prms = {page:page,maxLength:90}
+        prms = {
+            page:page,
+            maxLength:60,
+            limit:100}
 
         const x = await request(
             {url:process.env.QUOTES_URL, qs:prms},
@@ -216,7 +219,14 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
                 if(!body || error ) {
                     if(error) console.log(error)
                     throw createError.InternalServerError()}
-                res.send(body)
+                var json = JSON.parse(body)
+                var final = JSON.parse("[]")
+                json.results.forEach(element => {
+                    final.push({
+                        "quote":element.content})
+                });
+                
+                res.send(final)
             }
         )
         console.log("end")
