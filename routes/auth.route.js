@@ -94,6 +94,7 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
     }
 })
 
+
 router.post('/updatedairy',verifyAccessToken,async(req,res,next)=>{
     try {
         const {_id,postcontent} = req.body
