@@ -9,9 +9,13 @@ const PostSchema = mongoose.Schema({
         type:String,
         require:true,
     },
-    date:{
-        type:Date,
-        default:Date()
+    year:{
+        type:Number,
+        require:true
+    },
+    day:{
+        type:Number,
+        require:true
     },
     mood:{
         type:String,
@@ -24,7 +28,7 @@ const UserPostSchema = mongoose.Schema({
         require:true,
     },
     date:{
-        type:Date,
+        type:Number,
         default:Date(),
     },
     postId:{

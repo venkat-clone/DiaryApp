@@ -5,7 +5,7 @@ const User = require('../models/User.model')
 const {Post,UserPost} = require('../models/Post.model')
 const {authSchema} = require('../helpers/Validation_Schema')
 const {signAccessToken,signRefreshToken,verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper')
-const { findOneAndDelete } = require('../models/User.model')
+const { findOneAndDelete, findById } = require('../models/User.model')
 const request = require('request');
 const https = require('https')
 
@@ -76,15 +76,48 @@ router.post('/logout',async(req,res,next)=>{
     
 })
 
-router.post('/createpost',verifyAccessToken,async(req,res,next)=>{
+router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
     try {
-        const {postcontent} = req.body
+        const {postcontent,year,day} = req.body
         const UserId = req.Payload.aud
-        if(!UserId) throw createError.InternalServerError
-        const Newpost = Post({UserId,postcontent})
+        if(!postcontent ||  !year || !day ) throw createError.BadRequest
+
+        const Newpost = Post({UserId,postcontent,year,day})
+        // const Newpost = Post({UserId,postcontent})
         const s = await Newpost.save()
         await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
         res.send(Newpost)
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+router.post('/updatedairy',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const {_id,postcontent} = req.body
+        console.log(req.body)
+        if(!_id ) throw createError.BadRequest        
+        const post =await Post.updateOne({_id},{postcontent})
+        res.send(await Post.findById(_id))
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+router.get('/user/dairys',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const uId = req.Payload.aud
+        // const user = await User.findById(uId)
+        // const list = JSON.parse("[]")
+        // user.Dirays.forEach(e=>{
+        //     list.push({await Post.findById(e.postId)})
+        // })
+        const daitys  = await Post.find({UserId:uId})
+        res.send(daitys)
 
     } catch (error) {
         console.log(error)
@@ -114,6 +147,18 @@ router.get('/MyPosts',verifyAccessToken,async(req,res,next)=>{
         if(MyPosts.length==0) res.send("NO Posts Have Been Created")
         else res.send(MyPosts)
     } catch (error) {
+        next(error)
+    }
+})
+
+
+router.get('/getDairy',verifyAccessToken,async(req,res,next)=>{
+    try{
+        const UserId = req.Payload.aud
+        const MyDairy = await Dairy.find({UserId:UserId})
+
+    }
+    catch(error){
         next(error)
     }
 })
