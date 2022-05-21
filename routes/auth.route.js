@@ -188,6 +188,7 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
                     final.push({
                         "url":element.largeImageURL})
                 });
+                console.log(final)
                 res.send(final)
             }
         )
