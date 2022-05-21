@@ -98,10 +98,10 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
 
 router.post('/updatedairy',verifyAccessToken,async(req,res,next)=>{
     try {
-        const {_id,postcontent} = req.body
+        const {_id,content} = req.body
         console.log(req.body)
         if(!_id ) throw createError.BadRequest        
-        const post =await Post.updateOne({_id},{postcontent})
+        const post =await Post.updateOne({_id},{content})
         res.send(await Post.findById(_id))
 
     } catch (error) {
