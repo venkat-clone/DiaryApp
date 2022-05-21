@@ -78,12 +78,12 @@ router.post('/logout',async(req,res,next)=>{
 
 router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
     try {
-        const {postcontent,year,day} = req.body
+        const {content,year,day} = req.body
         const UserId = req.Payload.aud
         console.log(req.body)
-        if(!postcontent ||  !year || !day ) throw createError.BadRequest
+        if(!content ||  !year || !day ) throw createError.BadRequest
 
-        const Newpost = Post({UserId,postcontent,year,day})
+        const Newpost = Post({UserId,content,year,day})
         // const Newpost = Post({UserId,postcontent})
         const s = await Newpost.save()
         await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })

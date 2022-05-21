@@ -5,7 +5,7 @@ const PostSchema = mongoose.Schema({
         type:String,
         require:true,
     },
-    postcontent:{
+    content:{
         type:String,
         require:true,
     },
@@ -23,7 +23,7 @@ const PostSchema = mongoose.Schema({
 })
 
 const UserPostSchema = mongoose.Schema({
-    postcontent:{
+    content:{
         type:String,
         require:true,
     },
