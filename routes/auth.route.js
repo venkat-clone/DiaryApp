@@ -80,6 +80,7 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
     try {
         const {postcontent,year,day} = req.body
         const UserId = req.Payload.aud
+        console.log(req.body)
         if(!postcontent ||  !year || !day ) throw createError.BadRequest
 
         const Newpost = Post({UserId,postcontent,year,day})
