@@ -184,7 +184,7 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
                 const json = JSON.parse(body)
                 const final = JSON.parse("[]")
                 json.hits.forEach(element => {
-                   
+                    
                     final.push({
                         "url":element.largeImageURL})
                 });
