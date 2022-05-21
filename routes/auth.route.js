@@ -96,6 +96,46 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
 })
 
 
+router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
+    try{
+        const Uid = req.Payload.aud
+        const user = await User.findById(Uid)
+        console.log(user.DiryCount)
+        const count = user.DiryCount
+        res.send({count})
+
+    }catch(error){
+        console.log(error)
+    }
+})
+
+router.post('/makefake',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const {content,year,day} = req.body
+        const UserId = req.Payload.aud
+        console.log(req.body)
+        if(!content ||  !year || !day ) throw createError.BadRequest
+for (let i = 0; i < 3650; i++) {
+    console.log(i)
+    const newcontent= content +i.toString();
+    const Newpost = Post({UserId,newcontent,year,day})
+    // const Newpost = Post({UserId,postcontent})
+    const s = await Newpost.save()
+    await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
+}
+        const Newpost = Post({UserId,content,year,day})
+        // const Newpost = Post({UserId,postcontent})
+        const s = await Newpost.save()
+        await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
+        res.send(Newpost)
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+
 router.post('/updatedairy',verifyAccessToken,async(req,res,next)=>{
     try {
         const {_id,content} = req.body
