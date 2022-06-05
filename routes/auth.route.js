@@ -5,23 +5,24 @@ const User = require('../models/User.model')
 const {Post,UserPost} = require('../models/Post.model')
 const {authSchema} = require('../helpers/Validation_Schema')
 const {signAccessToken,signRefreshToken,verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper')
-const { findOneAndDelete } = require('../models/User.model')
+const { findOneAndDelete, findById } = require('../models/User.model')
 const request = require('request');
 const https = require('https')
 
 router.post('/register',async(req,res,next)=>{
     try {
-
+        console.log("step 1")
         const validUser = await authSchema.validateAsync(req.body)
         const doseExist = await User.findOne({email:validUser.email})
         if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`)
-        const user = new User(validUser)
-        const Saveduser = await user.save()
-        
+        console.log("step 2")
+        console.log(validUser)
+        const user_ = await User(validUser).save()
+        // const Saveduser = await user_.save()
 
-        const accestoken = await signAccessToken(Saveduser.id);
-        const refreshToken = await signRefreshToken(Saveduser.id)
-
+        const accestoken = await signAccessToken(user_.id);
+        const refreshToken = await signRefreshToken(user_.id)
+        console.log("step 4")
         res.send({accestoken,refreshToken})
 
     } catch (error) {
@@ -42,10 +43,8 @@ router.post('/login',async(req,res,next)=>{
         if(!isMatch) throw createError.Unauthorized("User/password Not Valid")
 
         const accessToken = await signAccessToken(User_.id)
-        console.log("Step 2")
 
         const refreshToken = await signRefreshToken(User_.id)
-        console.log("Step 3")
 
         res.send({accessToken,refreshToken})
     } catch (error) {
@@ -77,15 +76,89 @@ router.post('/logout',async(req,res,next)=>{
     
 })
 
-router.post('/createpost',verifyAccessToken,async(req,res,next)=>{
+router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
     try {
-        const {postcontent} = req.body
+        const {content,year,day} = req.body
         const UserId = req.Payload.aud
-        if(!UserId) throw createError.InternalServerError
-        const Newpost = Post({UserId,postcontent})
+        console.log(req.body)
+        if(!content ||  !year || !day ) throw createError.BadRequest
+
+        const Newpost = Post({UserId,content,year,day})
+        // const Newpost = Post({UserId,postcontent})
         const s = await Newpost.save()
         await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
         res.send(Newpost)
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+
+router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
+    try{
+        const Uid = req.Payload.aud
+        const user = await User.findById(Uid)
+        console.log(user.DiryCount)
+        const count = user.DiryCount
+        res.send({count})
+
+    }catch(error){
+        console.log(error)
+    }
+})
+
+router.post('/makefake',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const {content,year,day} = req.body
+        const UserId = req.Payload.aud
+        console.log(req.body)
+        if(!content ||  !year || !day ) throw createError.BadRequest
+for (let i = 0; i < 3650; i++) {
+    console.log(i)
+    const Newpost = Post({UserId,content,year,day})
+    // const Newpost = Post({UserId,postcontent})
+    const s = await Newpost.save()
+    await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
+}
+        const Newpost = Post({UserId,content,year,day})
+        // const Newpost = Post({UserId,postcontent})
+        const s = await Newpost.save()
+        await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
+        res.send(Newpost)
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+
+router.post('/updatedairy',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const {_id,content} = req.body
+        console.log(req.body)
+        if(!_id ) throw createError.BadRequest        
+        const post =await Post.updateOne({_id},{content})
+        res.send(await Post.findById(_id))
+
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+router.get('/user/dairys',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const uId = req.Payload.aud
+        // const user = await User.findById(uId)
+        // const list = JSON.parse("[]")
+        // user.Dirays.forEach(e=>{
+        //     list.push({await Post.findById(e.postId)})
+        // })
+        const daitys  = await Post.find({UserId:uId})
+        res.send(daitys)
 
     } catch (error) {
         console.log(error)
@@ -119,18 +192,27 @@ router.get('/MyPosts',verifyAccessToken,async(req,res,next)=>{
     }
 })
 
+
+router.get('/getDairy',verifyAccessToken,async(req,res,next)=>{
+    try{
+        const UserId = req.Payload.aud
+        const MyDairy = await Dairy.find({UserId:UserId})
+
+    }
+    catch(error){
+        next(error)
+    }
+})
+
 router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
     try {
-        console.log("waiting")
-        const {page} = req.body
-
+        const {orientation} = req.body
         prms = {
             key: process.env.PIXBAYKEY,
             orientation:'vertical',
             editors_choice:'true',
-            safesearch:'latest',
-            per_page:30,
-            page:page,
+            per_page:20,
+            page:req.query.page|1,
         }
 
         const x = await request(
@@ -139,7 +221,15 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
                 if(!body || error ) {
                     if(error) console.log(error)
                     throw createError.InternalServerError()}
-                res.send(body)
+                const json = JSON.parse(body)
+                const final = JSON.parse("[]")
+                json.hits.forEach(element => {
+                    
+                    final.push({
+                        "url":element.largeImageURL})
+                });
+                console.log(final)
+                res.send(final)
             }
         )
         console.log("end")
@@ -161,6 +251,43 @@ router.get('/wallpapers',verifyAccessToken,async(req,res,next)=>{
     }
 })
 
+router.get('/search/wall',verifyAccessToken,async(req,res,next)=>{
+    try {
+        const {orientation} = req.body
+        prms = {
+            key: process.env.PIXBAYKEY,
+            orientation:'vertical',
+            editors_choice:'true',
+            per_page:20,
+            q:req.query.pix||"wallpapr",
+            page:req.query.page|1,
+        }
+
+        const x = await request(
+            {url:process.env.PIXABAY_URL, qs:prms},
+            function async(error,responce,body){
+                if(!body || error ) {
+                    if(error) console.log(error)
+                    throw createError.InternalServerError()}
+                const json = JSON.parse(body)
+                const final = JSON.parse("[]")
+                // final.hits.pop()
+                
+                json.hits.forEach(element => {
+                    final.push({
+                        "url":element.largeImageURL})
+                });
+                res.send(final)
+            }
+        )
+        console.log("end")
+
+    } catch (error){
+        next(error)
+    }
+})
+
+
 
 
 router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
@@ -168,7 +295,10 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
         console.log("waiting")
         const {page} = req.body
 
-        prms = {page:page,maxLength:90}
+        prms = {
+            page:req.query.page,
+            maxLength:60,
+            limit:100}
 
         const x = await request(
             {url:process.env.QUOTES_URL, qs:prms},
@@ -176,7 +306,14 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
                 if(!body || error ) {
                     if(error) console.log(error)
                     throw createError.InternalServerError()}
-                res.send(body)
+                var json = JSON.parse(body)
+                var final = JSON.parse("[]")
+                json.results.forEach(element => {
+                    final.push({
+                        "quote":element.content})
+                });
+                console.log(final)
+                res.send(final)
             }
         )
         console.log("end")

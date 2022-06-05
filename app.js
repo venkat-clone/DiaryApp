@@ -12,7 +12,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 // app.use(express.urlencoded({extended:true}))
 app.get('/',async(req,res,next)=>{
-    res.send('new Changes')
+    res.send('new Changes v1.2')
 })
 
 app.get('/users/cleandb',async(req,res,next)=>{

@@ -4,7 +4,7 @@ const createError = require('http-errors')
 
 module.exports ={
     signAccessToken:(userId)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
             const Payload = {}
             const opctions ={
                 expiresIn:'40d',
@@ -17,14 +17,13 @@ module.exports ={
                     reject(createError.InternalServerError())
                     return
                 }
-                resolve(token)
-
+                resolve('Bearer '+token)
 
             })
         })
     },
     verifyAccessToken:(req,res,next)=>{
-        if(!req.headers['authorization']) return next(createError.Unauthorized('una'))
+        if(!req.headers['authorization']) return next(createError.Unauthorized('Unauthorized Request'))
         const authheader = req.headers['authorization']
         const bearearToken = authheader.split(' ')
         const token = bearearToken[1]
@@ -92,7 +91,7 @@ module.exports ={
         })
     },
     verifyRefreshToken:(refreshToken)=>{
-        return new Promise((resolve,reject)=>{
+        return new Promise(async (resolve,reject)=>{
             JWT.verify(refreshToken,process.env.REFRESH_PRIATE_KEY,(err,Payload)=>{
                 if(err) return reject(createError.Unauthorized())
                 const userId = Payload.aud
