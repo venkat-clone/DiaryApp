@@ -117,8 +117,7 @@ router.post('/makefake',verifyAccessToken,async(req,res,next)=>{
         if(!content ||  !year || !day ) throw createError.BadRequest
 for (let i = 0; i < 3650; i++) {
     console.log(i)
-    const newcontent= content +i.toString();
-    const Newpost = Post({UserId,newcontent,year,day})
+    const Newpost = Post({UserId,content,year,day})
     // const Newpost = Post({UserId,postcontent})
     const s = await Newpost.save()
     await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
