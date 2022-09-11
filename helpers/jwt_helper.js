@@ -34,29 +34,6 @@ module.exports ={
         });
 
 
-        // const bearearToken = authheader.split(' ')
-        // const token = bearearToken[1]
-        // JWT.verify(token,process.env.ACCESS_PRIATE_KEY,(err,Payload)=>{
-        //     if(err) {
-        //         // if(err.name === 'JsonWebTokenError'){
-        //         //     console.log(`${err.name}`)
-        //         //     return next(createError.Unauthorized())
-        //         // }
-        //         // else{
-        //         //     return next(createError.Unauthorized(err.message))
-        //         // }
-        //         const message = err.name === 'JsonWebTokenError'?'Unauthorized':err.message
-        //         console.log(message)
-        //         const e = createError.Unauthorized(message)
-        //         e.code = 401
-        //         return next(e)
-        //     }
-
-            
-        //     req.Payload = Payload
-        //     next()
-            
-        // })
   
 }}
 
