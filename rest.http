@@ -76,3 +76,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDk1MTU0M
 # POST  http://localhost:5000/auth/62493afc732f8a984f97f7c7/like
 # Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDg5NjQ4NDMsImV4cCI6MTY0ODk2NzI0MywiYXVkIjoiNjI0ODgyY2M0ZWVhOWE4YzRkMmY2Njc3IiwiaXNzIjoibXlwb3N0LmNvbSJ9.Ylsvn0qgsssoV-n_znmwkvvhIxMKd5eVL_UIc0uB0N8
 
+###
+POST http://localhost:4000/auth/send/email
+Content-Type: application/json
+
+{
+    "user":{"_id":"IS"}
+}

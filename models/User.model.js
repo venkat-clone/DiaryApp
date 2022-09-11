@@ -24,6 +24,11 @@ const ProfileSchma = new mongoose.Schema({
     DiryCount:{
         type:Number,
         default:0
+    },
+    Uid:{
+        type:String,
+        required:true,
+        unique:true,
     }
 
 })
