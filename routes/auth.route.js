@@ -5,10 +5,7 @@ const User = require('../models/User.model')
 const {Post,UserPost} = require('../models/Post.model')
 const {authSchema} = require('../helpers/Validation_Schema')
 const {signAccessToken,signRefreshToken,verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper')
-const { findOneAndDelete, findById } = require('../models/User.model')
 const request = require('request');
-const https = require('https')
-
 router.post('/register',async(req,res,next)=>{
     try {
         console.log("step 1")
@@ -31,6 +28,7 @@ router.post('/register',async(req,res,next)=>{
         next(error)
     }
 })
+
 router.post('/login',async(req,res,next)=>{
 
     try {
@@ -79,7 +77,7 @@ router.post('/logout',async(req,res,next)=>{
 router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
     try {
         const {content,year,day} = req.body
-        const UserId = req.Payload.aud
+        const UserId = req.aud
         console.log(req.body)
         if(!content ||  !year || !day ) throw createError.BadRequest
 
@@ -98,7 +96,7 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
 
 router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
     try{
-        const Uid = req.Payload.aud
+        const Uid = req.aud
         const user = await User.findById(Uid)
         console.log(user.DiryCount)
         const count = user.DiryCount
@@ -112,7 +110,7 @@ router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
 router.post('/makefake',verifyAccessToken,async(req,res,next)=>{
     try {
         const {content,year,day} = req.body
-        const UserId = req.Payload.aud
+        const UserId = req.aud
         console.log(req.body)
         if(!content ||  !year || !day ) throw createError.BadRequest
 for (let i = 0; i < 3650; i++) {
@@ -151,7 +149,8 @@ router.post('/updatedairy',verifyAccessToken,async(req,res,next)=>{
 
 router.get('/user/dairys',verifyAccessToken,async(req,res,next)=>{
     try {
-        const uId = req.Payload.aud
+
+        const uId = req.aud
         // const user = await User.findById(uId)
         // const list = JSON.parse("[]")
         // user.Dirays.forEach(e=>{
@@ -169,7 +168,7 @@ router.get('/user/dairys',verifyAccessToken,async(req,res,next)=>{
 router.post('/deletepost',verifyAccessToken,async(req,res,next)=>{
     try {
         const {postId} = req.body
-        const UserId = req.Payload.aud
+        const UserId = req.aud
         const DeletedPost = await Post.findByIdAndDelete(postId)
         if(!DeletedPost) throw createError.BadRequest('Post Not Found')
         const UPost = await User.findOneAndUpdate({UserId},{$pull:{Dirays:{postId:DeletedPost._id.valueOf()}},$inc: { DiryCount: -1 } })        
@@ -183,7 +182,7 @@ router.post('/deletepost',verifyAccessToken,async(req,res,next)=>{
 
 router.get('/MyPosts',verifyAccessToken,async(req,res,next)=>{
     try {
-        const UserId=req.Payload.aud
+        const UserId=req.aud
         const MyPosts = await Post.find({UserId:UserId})
         if(MyPosts.length==0) res.send("NO Posts Have Been Created")
         else res.send(MyPosts)
@@ -195,7 +194,7 @@ router.get('/MyPosts',verifyAccessToken,async(req,res,next)=>{
 
 router.get('/getDairy',verifyAccessToken,async(req,res,next)=>{
     try{
-        const UserId = req.Payload.aud
+        const UserId = req.aud
         const MyDairy = await Dairy.find({UserId:UserId})
 
     }
@@ -322,12 +321,19 @@ router.get('/quotes',verifyAccessToken,async(req,res,next)=>{
     }
 })
 
-
-
-
-
-
-
+router.post('/create/user',verifyAccessToken, async(req,res,next)=>{
+    try{
+        const validUser = await authSchema.validateAsync(req.body);
+        const doseExist = await User.findOne({email:validUser.email});
+        if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`);
+        validUser.Uid = req.aud;
+        const user_ = await User(validUser).save();
+        res.send({user_});
+    }catch(e){
+        console.log(e)
+        next(e)
+    }
+})
 
 
 module.exports = router
