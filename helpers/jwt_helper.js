@@ -8,6 +8,7 @@ var admin = require("firebase-admin");
 serviceAccount.project_id = process.env.PROJECT_ID
 serviceAccount.private_key_id = process.env.PRIVATE_KEY_ID
 serviceAccount.private_key = process.env.PRIVATE_KEY
+serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n')
 serviceAccount.client_email = process.env.CLIENT_EMAIL
 serviceAccount.client_id = process.env.CLIENT_ID
 serviceAccount.client_x509_cert_url = process.env.CLIENT_X509_CERT_URL
