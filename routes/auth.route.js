@@ -97,7 +97,7 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
 router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
     try{
         const Uid = req.aud
-        const user = await User.findById(Uid)
+        const user = await User.find({Uid})
         console.log(user.DiryCount)
         const count = user.DiryCount
         res.send({count})
