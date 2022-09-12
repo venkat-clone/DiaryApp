@@ -12,9 +12,14 @@ serviceAccount.client_email = process.env.CLIENT_EMAIL
 serviceAccount.client_id = process.env.CLIENT_ID
 serviceAccount.client_x509_cert_url = process.env.CLIENT_X509_CERT_URL
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+try {
+    print(serviceAccount)
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+} catch (error) {
+    console.error(error)
+}
 
 
 module.exports ={
