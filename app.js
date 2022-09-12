@@ -7,7 +7,7 @@ const Authroute = require('./routes/auth.route')
 const {verifyAccessToken} = require('./helpers/jwt_helper')
 require('./helpers/init_redis')
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4000
 app.use(morgan('dev'))
 app.use(express.json())
 // app.use(express.urlencoded({extended:true}))
