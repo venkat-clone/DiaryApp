@@ -25,7 +25,7 @@ const ProfileSchma = new mongoose.Schema({
         type:Number,
         default:0
     },
-    Uid:{
+    UserId:{
         type:String,
         required:true,
         unique:true,

@@ -40,5 +40,6 @@ app.use((err,req,res,next)=>{
 
 const server = app.listen(PORT,()=>{
     const port = server.address().port;
+    console.log(`server running on ${server.address().address}`)
     console.log(`Server running on port ${port}`)
 })

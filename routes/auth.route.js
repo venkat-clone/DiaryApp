@@ -4,7 +4,7 @@ const createError = require('http-errors')
 const User = require('../models/User.model')
 const {Post,UserPost} = require('../models/Post.model')
 const {authSchema} = require('../helpers/Validation_Schema')
-const {signAccessToken,signRefreshToken,verifyRefreshToken, verifyAccessToken} = require('../helpers/jwt_helper')
+const { verifyAccessToken} = require('../helpers/jwt_helper')
 const request = require('request');
 router.post('/register',async(req,res,next)=>{
     try {
@@ -96,11 +96,11 @@ router.post('/createdairy',verifyAccessToken,async(req,res,next)=>{
 
 router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
     try{
-        const Uid = req.aud
-        const user = await User.find({Uid})
-        console.log(user.DiryCount)
-        const count = user.DiryCount
-        res.send({count})
+        const UserId = req.aud
+        const user = await User.findOne({UserId:UserId})
+        console.log("DairyCount",user)
+        
+        res.send({count:user.DiryCount || 0})
 
     }catch(error){
         console.log(error)
@@ -109,16 +109,24 @@ router.get('/user/dairyscount',verifyAccessToken,async(req,res,next)=>{
 
 router.post('/makefake',verifyAccessToken,async(req,res,next)=>{
     try {
-        const {content,year,day} = req.body
+        var {content,year} = req.body
+        var day =0
         const UserId = req.aud
         console.log(req.body)
-        if(!content ||  !year || !day ) throw createError.BadRequest
-for (let i = 0; i < 3650; i++) {
-    console.log(i)
-    const Newpost = Post({UserId,content,year,day})
+        if(!content ||  !year ) throw createError.BadRequest
+for (let i = 0; i < 1095; i++) {
+    if(i%365==0)
+    { year++;
+        day =0;
+    }
+    
+    console.log(i);
+    const st = content+year+":"+day;
+    const Newpost = await Post({UserId,content,year,day})
     // const Newpost = Post({UserId,postcontent})
     const s = await Newpost.save()
     await User.updateOne({UserId},{$push:{Dirays:{postId:s._id.valueOf()}},$inc: { DiryCount: 1 } })
+    day++;
 }
         const Newpost = Post({UserId,content,year,day})
         // const Newpost = Post({UserId,postcontent})
@@ -326,7 +334,6 @@ router.post('/create/user',verifyAccessToken, async(req,res,next)=>{
         const validUser = await authSchema.validateAsync(req.body);
         const doseExist = await User.findOne({email:validUser.email});
         if(doseExist) throw createError.Conflict(`${validUser.email} already Exist`);
-        validUser.Uid = req.aud;
         const user_ = await User(validUser).save();
         res.send({user_});
     }catch(e){
